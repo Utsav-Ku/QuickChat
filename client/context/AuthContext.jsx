@@ -32,9 +32,12 @@ export const AuthProvider = ({ children }) => {
 
     //Connect socket function to handle socket connection and online users updates
     const connectSocket = (userData) => {
-        if(!userData || socket?.connectd) return;
+        if (!userData || socket?.connected) return;
+
         const newSocket = io(backendUrl, {
-            userId: userData._id,
+            query: {
+                userId: userData._id,
+            }
         });
 
         newSocket.connect();
@@ -42,8 +45,8 @@ export const AuthProvider = ({ children }) => {
 
         newSocket.on("getOnlineUsers", (userIds) => {
             setOnlineUsers(userIds);
-        })
-    }
+        });
+    };
 
     //Login function to handle user authentication and scoket connection
     const login = async (state, credentials) => {
